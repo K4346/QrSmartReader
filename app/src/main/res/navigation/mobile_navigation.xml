@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/resultScreenFragment">
+
+
+    <fragment
+        android:id="@+id/cameraDetectionFragment"
+        android:name="com.example.qrsmartreader.ui.camera_detection_screen.CameraDetectionFragment"
+        android:label="CameraDetectionFragment" >
+        <action
+            android:id="@+id/action_cameraDetectionFragment_to_resultScreenFragment"
+            app:destination="@id/resultScreenFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/galleryDetectionFragment"
+        android:name="com.example.qrsmartreader.ui.gallery_detection.GalleryDetectionFragment"
+        android:label="fragment_gallery_detection"
+        tools:layout="@layout/fragment_gallery_detection" >
+        <action
+            android:id="@+id/action_galleryDetectionFragment_to_resultScreenFragment"
+            app:destination="@id/resultScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultScreenFragment"
+        android:name="com.example.qrsmartreader.ui.result_screen.ResultScreenFragment"
+        android:label="ResultScreenFragment" >
+        <action
+            android:id="@+id/action_resultScreenFragment_to_galleryDetectionFragment"
+            app:destination="@id/galleryDetectionFragment" />
+        <action
+            android:id="@+id/action_resultScreenFragment_to_cameraDetectionFragment"
+            app:destination="@id/cameraDetectionFragment" />
+        <action
+            android:id="@+id/action_resultScreenFragment_to_settingsScreenFragment"
+            app:destination="@id/settingsScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsScreenFragment"
+        android:name="com.example.qrsmartreader.ui.settings_screen.SettingsScreenFragment"
+        android:label="fragment_settings_screen"
+        tools:layout="@layout/fragment_settings_screen" >
+        <action
+            android:id="@+id/action_settingsScreenFragment_to_resultScreenFragment"
+            app:destination="@id/resultScreenFragment" />
+    </fragment>
+
+</navigation>
