@@ -1,7 +1,7 @@
 package com.example.qrsmartreader.domain.repositories
 
 import androidx.lifecycle.LiveData
-import com.example.qrsmartreader.data.entities.QrResultEntity
+import com.example.qrsmartreader.domain.entities.QrResultEntity
 
 interface QrResultsRepository {
 

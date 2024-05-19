@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.qrsmartreader.App
 import com.example.qrsmartreader.SingleLiveEvent
-import com.example.qrsmartreader.data.entities.QrResultEntity
+import com.example.qrsmartreader.domain.entities.QrResultEntity
 import com.example.qrsmartreader.domain.AiResult
 import com.example.qrsmartreader.domain.AiScanInteractor
 import com.example.qrsmartreader.ui.interactors.QrDecoderInteractor

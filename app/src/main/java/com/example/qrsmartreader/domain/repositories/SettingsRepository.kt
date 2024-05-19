@@ -1,8 +1,8 @@
 package com.example.qrsmartreader.domain.repositories
 
 import android.app.Application
-import com.example.qrsmartreader.data.entities.CameraRecognitionType
-import com.example.qrsmartreader.data.entities.ProcessorRecognitionType
+import com.example.qrsmartreader.domain.entities.CameraRecognitionType
+import com.example.qrsmartreader.domain.entities.ProcessorRecognitionType
 
 interface SettingsRepository {
     fun initialize(application: Application)

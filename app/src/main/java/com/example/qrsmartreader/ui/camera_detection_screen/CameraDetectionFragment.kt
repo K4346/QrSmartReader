@@ -22,7 +22,8 @@ import com.example.qrsmartreader.R
 import com.example.qrsmartreader.Yolov8Ncnn
 import com.example.qrsmartreader.Yolov8NcnnInterface
 import com.example.qrsmartreader.Yolov8NcnnPose
-import com.example.qrsmartreader.data.entities.CameraRecognitionType
+import com.example.qrsmartreader.domain.entities.CameraRecognitionType
+import com.example.qrsmartreader.domain.entities.ProcessorRecognitionType
 import com.example.qrsmartreader.databinding.FragmentCameraDetectionBinding
 import com.example.qrsmartreader.ui.result_screen.ResultScreenFragment.Companion.QR_DETECTION_RESULT
 
@@ -30,12 +31,6 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
 
     private lateinit var binding: FragmentCameraDetectionBinding
 
-    private var currentModelPosition = 0
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("current_model_position", currentModelPosition)
-    }
 
     private val viewModel: CameraDetectionViewModel by viewModels()
 
@@ -43,10 +38,8 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
     private val REQUEST_CAMERA = 100
 
     private lateinit var yolov8ncnn: Yolov8NcnnInterface
-    private var facing = 1
 
     private var current_model = 0
-    private var current_cpugpu = 0
 
     private val handler: Handler = Handler(Looper.getMainLooper())
 
@@ -59,11 +52,10 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
         binding = FragmentCameraDetectionBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        yolov8ncnn =
-            when (arguments?.get(CAMERA_RECOGNITION_TYPE)) {
-                CameraRecognitionType.Pose -> Yolov8NcnnPose()
-                else -> Yolov8Ncnn()
-            }
+        yolov8ncnn = when (viewModel.modelType){
+            CameraRecognitionType.Segment -> Yolov8Ncnn()
+            CameraRecognitionType.Pose -> Yolov8NcnnPose()
+        }
         return view
     }
 
@@ -79,40 +71,16 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
 
         initListeners()
 
-        binding.buttonSwitchCamera.setOnClickListener {
-            val new_facing = 1 - facing
-            yolov8ncnn.closeCamera()
-            yolov8ncnn.openCamera(new_facing, viewModel.isFpsCounting)
-            facing = new_facing
-        }
-
         binding.spinnerModel.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 arg0: AdapterView<*>?,
-                arg1: View?,
+                arg1: View?,А
                 position: Int,
                 id: Long
             ) {
                 if (arg1 == null) return
                 if (position != current_model) {
                     current_model = position
-                    reload()
-                }
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>?) {}
-        }
-
-        binding.spinnerCPUGPU.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                arg0: AdapterView<*>?,
-                arg1: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (arg1 == null) return
-                if (position != current_cpugpu) {
-                    current_cpugpu = position
                     reload()
                 }
             }
@@ -136,7 +104,6 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
                         bundleOf(QR_DETECTION_RESULT to result)
                     )
                 binding.spinnerModel.onItemSelectedListener = null
-                binding.spinnerCPUGPU.onItemSelectedListener = null
                 yolov8ncnn.sendQRDataToCpp()?.let {
                     viewModel.currentImage = it
                 }
@@ -145,7 +112,12 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
     }
 
     private fun reload() {
-        val ret_init = yolov8ncnn.loadModel(requireActivity().assets, current_model, current_cpugpu)
+        val ret_init = yolov8ncnn.loadModel(requireActivity().assets, current_model,
+            when (viewModel.processorType){
+                ProcessorRecognitionType.Cpu -> 0
+                ProcessorRecognitionType.Gpu -> 1
+            }
+        )
         if (!ret_init) {
             Log.e("MainActivity", "yolov8ncnn loadModel failed")
         }
@@ -168,7 +140,7 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
         ) {
             requestPermissions(arrayOf<String>(android.Manifest.permission.CAMERA), REQUEST_CAMERA)
         }
-        yolov8ncnn.openCamera(facing, viewModel.isFpsCounting)
+        yolov8ncnn.openCamera(1, viewModel.isFpsCounting)
         scanQRCodeRunnable.run()
     }
 

@@ -3,7 +3,7 @@ package com.example.qrsmartreader.domain.interactors
 import android.app.Application
 import androidx.lifecycle.LiveData
 import com.example.qrsmartreader.App
-import com.example.qrsmartreader.data.entities.QrResultEntity
+import com.example.qrsmartreader.domain.entities.QrResultEntity
 import com.example.qrsmartreader.domain.repositories.QrResultsRepository
 import com.example.qrsmartreader.domain.repositories.SettingsRepository
 import com.example.qrsmartreader.ui.interactors.QrResultsInteractor

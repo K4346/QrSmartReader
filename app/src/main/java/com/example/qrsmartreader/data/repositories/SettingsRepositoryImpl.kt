@@ -3,8 +3,8 @@ package com.example.qrsmartreader.data.repositories
 import android.app.Application
 import com.example.qrsmartreader.App
 import com.example.qrsmartreader.data.db.SettingsManager
-import com.example.qrsmartreader.data.entities.CameraRecognitionType
-import com.example.qrsmartreader.data.entities.ProcessorRecognitionType
+import com.example.qrsmartreader.domain.entities.CameraRecognitionType
+import com.example.qrsmartreader.domain.entities.ProcessorRecognitionType
 import com.example.qrsmartreader.domain.repositories.SettingsRepository
 import javax.inject.Inject
 

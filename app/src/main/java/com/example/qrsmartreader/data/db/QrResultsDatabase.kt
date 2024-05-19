@@ -3,7 +3,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.qrsmartreader.data.entities.QrResultEntity
+import com.example.qrsmartreader.domain.entities.QrResultEntity
 
 @Database(entities = [QrResultEntity::class], version = 1, exportSchema = false)
 abstract class QrResultsDatabase : RoomDatabase() {

@@ -4,7 +4,7 @@ import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.qrsmartreader.data.entities.QrResultEntity
+import com.example.qrsmartreader.domain.entities.QrResultEntity
 import com.example.qrsmartreader.databinding.ItemResultBinding
 import java.time.format.DateTimeFormatter
 

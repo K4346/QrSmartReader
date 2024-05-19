@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.example.qrsmartreader.R
-import com.example.qrsmartreader.data.entities.CameraRecognitionType
+import com.example.qrsmartreader.domain.entities.CameraRecognitionType
 import com.example.qrsmartreader.databinding.FragmentResultScreenBinding
 import com.example.qrsmartreader.ui.adapters.ResultHistoryAdapter
 import com.example.qrsmartreader.ui.camera_detection_screen.CameraDetectionFragment.Companion.CAMERA_RECOGNITION_TYPE
@@ -102,7 +102,7 @@ class ResultScreenFragment : Fragment() {
             openGalleryForImage()
         }
         binding.cameraButton.setOnClickListener {
-            openCameraScreen(CameraRecognitionType.Segment)
+            openCameraScreen()
         }
         binding.settingsButton.setOnClickListener {
             openSettingsScreen()
@@ -121,13 +121,9 @@ class ResultScreenFragment : Fragment() {
 
     }
 
-    private fun openCameraScreen(type: CameraRecognitionType) {
+    private fun openCameraScreen() {
         Navigation.findNavController(requireView())
-            .navigate(
-                R.id.action_resultScreenFragment_to_cameraDetectionFragment,
-                bundleOf(CAMERA_RECOGNITION_TYPE to type)
-            )
-
+            .navigate(R.id.action_resultScreenFragment_to_cameraDetectionFragment)
     }
 
     private fun openGalleryForImage() {

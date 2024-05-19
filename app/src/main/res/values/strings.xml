@@ -36,4 +36,6 @@
     <string name="cpu">CPU</string>
     <string name="gpu">GPU</string>
     <string name="settings">Настройки</string>
+    <string name="galery">Галерея</string>
+    <string name="camera">Камера</string>
 </resources>

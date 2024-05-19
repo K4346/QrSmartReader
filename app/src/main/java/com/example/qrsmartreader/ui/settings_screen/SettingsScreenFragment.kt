@@ -11,8 +11,8 @@ import androidx.core.text.isDigitsOnly
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.qrsmartreader.data.entities.CameraRecognitionType
-import com.example.qrsmartreader.data.entities.ProcessorRecognitionType
+import com.example.qrsmartreader.domain.entities.CameraRecognitionType
+import com.example.qrsmartreader.domain.entities.ProcessorRecognitionType
 import com.example.qrsmartreader.databinding.FragmentSettingsScreenBinding
 
 

@@ -3,8 +3,8 @@ package com.example.qrsmartreader.ui.settings_screen
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.example.qrsmartreader.App
-import com.example.qrsmartreader.data.entities.CameraRecognitionType
-import com.example.qrsmartreader.data.entities.ProcessorRecognitionType
+import com.example.qrsmartreader.domain.entities.CameraRecognitionType
+import com.example.qrsmartreader.domain.entities.ProcessorRecognitionType
 import com.example.qrsmartreader.ui.interactors.QrResultsInteractor
 import com.example.qrsmartreader.ui.interactors.SettingsInteractor
 import javax.inject.Inject

@@ -3,7 +3,7 @@ package com.example.qrsmartreader.data.repositories
 import androidx.lifecycle.LiveData
 import com.example.qrsmartreader.App
 import com.example.qrsmartreader.data.db.QrResultsDao
-import com.example.qrsmartreader.data.entities.QrResultEntity
+import com.example.qrsmartreader.domain.entities.QrResultEntity
 import com.example.qrsmartreader.domain.repositories.QrResultsRepository
 import javax.inject.Inject
 

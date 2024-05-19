@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.example.qrsmartreader.data.entities.CameraRecognitionType
-import com.example.qrsmartreader.data.entities.ProcessorRecognitionType
+import com.example.qrsmartreader.domain.entities.CameraRecognitionType
+import com.example.qrsmartreader.domain.entities.ProcessorRecognitionType
 import javax.inject.Singleton
 
 @Singleton

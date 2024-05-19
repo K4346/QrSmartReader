@@ -5,7 +5,9 @@ import android.graphics.Bitmap
 import androidx.lifecycle.AndroidViewModel
 import com.example.qrsmartreader.App
 import com.example.qrsmartreader.SingleLiveEvent
-import com.example.qrsmartreader.data.entities.QrResultEntity
+import com.example.qrsmartreader.domain.entities.CameraRecognitionType
+import com.example.qrsmartreader.domain.entities.ProcessorRecognitionType
+import com.example.qrsmartreader.domain.entities.QrResultEntity
 import com.example.qrsmartreader.ui.interactors.QrDecoderInteractor
 import com.example.qrsmartreader.ui.interactors.SettingsInteractor
 import javax.inject.Inject
@@ -26,9 +28,8 @@ class CameraDetectionViewModel(val myApplication: Application) : AndroidViewMode
     }
 
     val isFpsCounting: Boolean by lazy { interactor.getFpsCountIsVisible() }
-    val processorType: Boolean by lazy { interactor.getFpsCountIsVisible() }
-//    todo
-//    val isFpsCounting: Boolean by lazy { interactor.getFpsCountIsVisible() }
+    val processorType: ProcessorRecognitionType by lazy { interactor.getProcessorType() }
+    val modelType: CameraRecognitionType by lazy { interactor.getModelType() }
     var currentImage: IntArray = intArrayOf()
 
     fun decodeQr(bitmap: Bitmap) {

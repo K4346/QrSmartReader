@@ -1,4 +1,4 @@
-package com.example.qrsmartreader.data.entities
+package com.example.qrsmartreader.domain.entities
 
 enum class ProcessorRecognitionType() {
     Cpu, Gpu
