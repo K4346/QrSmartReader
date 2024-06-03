@@ -39,7 +39,6 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
 
     private lateinit var yolov8ncnn: Yolov8NcnnInterface
 
-    private var current_model = 0
 
     private val handler: Handler = Handler(Looper.getMainLooper())
 
@@ -71,23 +70,6 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
 
         initListeners()
 
-        binding.spinnerModel.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                arg0: AdapterView<*>?,
-                arg1: View?,А
-                position: Int,
-                id: Long
-            ) {
-                if (arg1 == null) return
-                if (position != current_model) {
-                    current_model = position
-                    reload()
-                }
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>?) {}
-        }
-
         reload()
     }
 
@@ -103,7 +85,6 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
                         R.id.action_cameraDetectionFragment_to_resultScreenFragment,
                         bundleOf(QR_DETECTION_RESULT to result)
                     )
-                binding.spinnerModel.onItemSelectedListener = null
                 yolov8ncnn.sendQRDataToCpp()?.let {
                     viewModel.currentImage = it
                 }
@@ -112,11 +93,14 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
     }
 
     private fun reload() {
-        val ret_init = yolov8ncnn.loadModel(requireActivity().assets, current_model,
+//        todo 0
+        val ret_init = yolov8ncnn.loadModel(requireActivity().assets, 0,
             when (viewModel.processorType){
                 ProcessorRecognitionType.Cpu -> 0
                 ProcessorRecognitionType.Gpu -> 1
-            }
+            },
+            viewModel.modelName+".bin",
+            viewModel.modelName+".param"
         )
         if (!ret_init) {
             Log.e("MainActivity", "yolov8ncnn loadModel failed")
@@ -173,10 +157,6 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
         val bitmap = Bitmap.createBitmap(byteArray!!, w, h, Bitmap.Config.ARGB_8888)
         binding.img.setImageBitmap(bitmap)
         viewModel.decodeQr(bitmap)
-    }
-
-    companion object {
-        const val CAMERA_RECOGNITION_TYPE = "CameraRecognitionType"
     }
 
 }

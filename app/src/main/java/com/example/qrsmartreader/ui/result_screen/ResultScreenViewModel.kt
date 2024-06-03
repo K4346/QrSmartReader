@@ -7,12 +7,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.qrsmartreader.App
 import com.example.qrsmartreader.SingleLiveEvent
+import com.example.qrsmartreader.domain.DataProcess
+import com.example.qrsmartreader.domain.entities.AiResultEntity
 import com.example.qrsmartreader.domain.entities.QrResultEntity
-import com.example.qrsmartreader.domain.AiResult
-import com.example.qrsmartreader.domain.AiScanInteractor
+import com.example.qrsmartreader.ui.interactors.AiScanOnnxInteractor
 import com.example.qrsmartreader.ui.interactors.QrDecoderInteractor
 import com.example.qrsmartreader.ui.interactors.QrResultsInteractor
-import com.example.yolov8n_pose.DataProcess
 import javax.inject.Inject
 
 class ResultScreenViewModel(val app: Application) : AndroidViewModel(app) {
@@ -23,7 +23,8 @@ class ResultScreenViewModel(val app: Application) : AndroidViewModel(app) {
     //    todo стоит от него избавиться и передавать в функциях
     lateinit var resizedBitmap: Bitmap
 
-    private val aiScanInteractor: AiScanInteractor by lazy { AiScanInteractor(app) }
+    @Inject
+    lateinit var aiScanOnnxInteractor: AiScanOnnxInteractor
 
     //    todo dagger
     @Inject
@@ -32,7 +33,7 @@ class ResultScreenViewModel(val app: Application) : AndroidViewModel(app) {
     @Inject
     lateinit var qrDecoderInteractor: QrDecoderInteractor
 
-    val aiRecognisedQrSLE = SingleLiveEvent<AiResult>()
+    val aiRecognisedQrSLE = SingleLiveEvent<AiResultEntity>()
 
     init {
         App().component.inject(this)
@@ -47,17 +48,16 @@ class ResultScreenViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun scanAiQr() {
         resizedBitmap = DataProcess.imageToBitmap(sourceBitmap!!)
-        val points = aiScanInteractor.findQrPoints(resizedBitmap)
+        val points = aiScanOnnxInteractor.findQrPoints(resizedBitmap)
         if (points == null) {
-            aiRecognisedQrSLE.value = AiResult(sourceBitmap, points, null)
+            aiRecognisedQrSLE.value = AiResultEntity(sourceBitmap, points, null)
             return
         }
         points.forEach {
             Log.i("kpopdots_ai", it.toString())
         }
 
-        aiRecognisedQrSLE.value = AiResult(sourceBitmap, points, null)
-        return
+        aiRecognisedQrSLE.value = AiResultEntity(sourceBitmap, points, null)
     }
 
     fun getHistory(): LiveData<List<QrResultEntity>> {
@@ -68,7 +68,7 @@ class ResultScreenViewModel(val app: Application) : AndroidViewModel(app) {
         return qrResultsInteractor.processingHistory(app = app, qrResults)
     }
 
-    fun setAiResult(it: AiResult) {
-        qrDecoderInteractor.aiResult = it
+    fun setAiResult(it: AiResultEntity) {
+        DataProcess.aiResult = it
     }
 }

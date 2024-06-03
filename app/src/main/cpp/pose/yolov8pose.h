@@ -25,7 +25,8 @@ class Inference
 {
 public:
     Inference();
-    int loadNcnnNetwork(AAssetManager* mgr, const char* modeltype , const int& modelInputShape, const float* meanVals, const float* normVals, bool useGpu = false);
+    int loadNcnnNetwork(AAssetManager* mgr, const char* modeltype , const int& modelInputShape, const float* meanVals, const float* normVals, bool useGpu = false,const char* model_bin ="",
+                        const char* model_param="");
     std::vector<Pose> runInference(const cv::Mat &input);
     int draw(cv::Mat& rgb, const std::vector<Pose>& objects);
 

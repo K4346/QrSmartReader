@@ -19,7 +19,7 @@ class Yolov8Ncnn:Yolov8NcnnInterface {
 
 
 
-    external override fun loadModel(mgr: AssetManager?, modelid: Int, cpugpu: Int): Boolean
+    external override fun loadModel(mgr: AssetManager?, modelid: Int, cpugpu: Int, modelBin:String, modelParam: String): Boolean
     external override fun openCamera(facing: Int, isFpsCounting: Boolean): Boolean
     external override fun closeCamera(): Boolean
     external override fun setOutputWindow(surface: Surface?): Boolean

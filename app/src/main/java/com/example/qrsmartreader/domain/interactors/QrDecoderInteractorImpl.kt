@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.example.qrsmartreader.App
 import com.example.qrsmartreader.SingleLiveEvent
-import com.example.qrsmartreader.domain.AiResult
+import com.example.qrsmartreader.domain.entities.AiResultEntity
 import com.example.qrsmartreader.ui.interactors.QrDecoderInteractor
 import com.example.qrsmartreader.ui.interactors.QrResultsInteractor
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
@@ -27,7 +27,7 @@ class QrDecoderInteractorImpl : QrDecoderInteractor {
     override val recognisedQrSLE = SingleLiveEvent<String>()
 
 //    todo убрать ненужное/починить
-override var aiResult: AiResult? = null
+override var aiResult: AiResultEntity? = null
 
     @Inject
     lateinit var qrResultsInteractor: QrResultsInteractor

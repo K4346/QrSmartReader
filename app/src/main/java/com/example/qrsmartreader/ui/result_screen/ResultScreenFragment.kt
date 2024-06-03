@@ -11,16 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.example.qrsmartreader.R
-import com.example.qrsmartreader.domain.entities.CameraRecognitionType
 import com.example.qrsmartreader.databinding.FragmentResultScreenBinding
 import com.example.qrsmartreader.ui.adapters.ResultHistoryAdapter
-import com.example.qrsmartreader.ui.camera_detection_screen.CameraDetectionFragment.Companion.CAMERA_RECOGNITION_TYPE
 
 class ResultScreenFragment : Fragment() {
 

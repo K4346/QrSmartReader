@@ -147,7 +147,7 @@ Inference::Inference(){
     workspace_pool_allocator.set_size_compare_ratio(0.f);
 }
 
-int Inference::loadNcnnNetwork(AAssetManager* mgr, const char* modeltype , const int& modelInputShape, const float* meanVals, const float* normVals, bool useGpu)
+int Inference::loadNcnnNetwork(AAssetManager* mgr, const char* modeltype , const int& modelInputShape, const float* meanVals, const float* normVals, bool useGpu, const char* model_bin, const char* model_param)
 {
     modelShape = modelInputShape;
     gpuEnabled = useGpu;
@@ -171,8 +171,8 @@ int Inference::loadNcnnNetwork(AAssetManager* mgr, const char* modeltype , const
 
     char parampath[256];
     char modelpath[256];
-    sprintf(parampath, "model_ncnn.param", modeltype);
-    sprintf(modelpath, "model_ncnn.bin", modeltype);
+    sprintf(parampath, "yolov8_pose_n_fp16.param", modeltype);
+    sprintf(modelpath, "yolov8_pose_n_fp16.bin", modeltype);
 
     net.load_param(mgr, parampath);
     net.load_model(mgr, modelpath);
@@ -305,9 +305,9 @@ std::vector<Pose> Inference::runInference(const cv::Mat &input)
                                               cv::Point2f(0, modelInput.rows - 1)};
         // Выполняем перспективное преобразование
         cv::Mat transformation = cv::getPerspectiveTransform(corners, dstPoints);
-        cv::warpPerspective(modelInput, modelInput, transformation, modelInput.size());
         cv::Mat gray;
-        cv::cvtColor(modelInput, gray, cv::COLOR_BGR2GRAY);
+        cv::warpPerspective(modelInput, gray, transformation, modelInput.size());
+        cv::cvtColor(gray, gray, cv::COLOR_BGR2GRAY);
         qr_w = gray.cols;
         qr_h = gray.rows;
         qr_image = gray.clone();
@@ -338,20 +338,20 @@ int Inference::draw(cv::Mat& rgb, const std::vector<Pose>& objects) {
                     cv::circle(res, { kps_x, kps_y }, 5, kps_color, -1);
                 }
             }
-            auto& ske = SKELETON[k];
-            int pos1_x = (int)std::round(kps[(ske[0] - 1) * 3]);
-            int pos1_y = (int)std::round(kps[(ske[0] - 1) * 3 + 1]);
-
-            int pos2_x = (int)std::round(kps[(ske[1] - 1) * 3]);
-            int pos2_y = (int)std::round(kps[(ske[1] - 1) * 3 + 1]);
-
-            float pos1_s = kps[(ske[0] - 1) * 3 + 2];
-            float pos2_s = kps[(ske[1] - 1) * 3 + 2];
-
-            if (pos1_s > 0.5f && pos2_s > 0.5f) {
-                cv::Scalar limb_color = cv::Scalar(LIMB_COLORS[k][0], LIMB_COLORS[k][1], LIMB_COLORS[k][2]);
-                cv::line(res, { pos1_x, pos1_y }, { pos2_x, pos2_y }, limb_color, 2);
-            }
+//            auto& ske = SKELETON[k];
+//            int pos1_x = (int)std::round(kps[(ske[0] - 1) * 3]);
+//            int pos1_y = (int)std::round(kps[(ske[0] - 1) * 3 + 1]);
+//
+//            int pos2_x = (int)std::round(kps[(ske[1] - 1) * 3]);
+//            int pos2_y = (int)std::round(kps[(ske[1] - 1) * 3 + 1]);
+//
+//            float pos1_s = kps[(ske[0] - 1) * 3 + 2];
+//            float pos2_s = kps[(ske[1] - 1) * 3 + 2];
+//
+//            if (pos1_s > 0.5f && pos2_s > 0.5f) {
+//                cv::Scalar limb_color = cv::Scalar(LIMB_COLORS[k][0], LIMB_COLORS[k][1], LIMB_COLORS[k][2]);
+//                cv::line(res, { pos1_x, pos1_y }, { pos2_x, pos2_y }, limb_color, 2);
+//            }
         }
     }
     return 0;

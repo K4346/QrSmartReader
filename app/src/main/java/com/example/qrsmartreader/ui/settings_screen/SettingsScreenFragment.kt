@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.addTextChangedListener
@@ -57,6 +59,25 @@ class SettingsScreenFragment : Fragment() {
                     viewModel.changeMaxResults(it.toString().toInt())
                 }
         }
+        initSpinner()
+
+    }
+
+    private fun initSpinner() {
+        binding.modelVersionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedItem = parent.getItemAtPosition(position).toString()
+                viewModel.changeModelName(selectedItem)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+        initSpinnerAdapter()
+    }
+
+    private fun initSpinnerAdapter() {
+        val adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, viewModel.getFilesFromAssetsFolder())
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        binding.modelVersionSpinner.adapter = adapter
     }
 
     private fun setRadioGroup() {
@@ -88,6 +109,7 @@ class SettingsScreenFragment : Fragment() {
                 if (binding.keyPointsDetectionMode.isChecked) CameraRecognitionType.Pose
                 else CameraRecognitionType.Segment
             viewModel.changeRecognitionType(type)
+            initSpinnerAdapter()
         }
     }
 }

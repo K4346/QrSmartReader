@@ -89,7 +89,7 @@ static int draw_fps(cv::Mat &rgb) {
     }
 
     char text[32];
-    sprintf(text, "FPS=%.2f", avg_fps);
+    sprintf(text, "%.2f мс", avg_fps);
 
     int baseLine = 0;
     cv::Size label_size = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
@@ -167,7 +167,8 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
 JNIEXPORT jboolean JNICALL
 Java_com_example_qrsmartreader_Yolov8NcnnPose_loadModel(JNIEnv *env, jobject thiz,
                                                         jobject assetManager, jint modelid,
-                                                        jint cpugpu) {
+                                                        jint cpugpu, jstring model_bin,
+                                                        jstring model_param) {
     if (modelid < 0 || modelid > 6 || cpugpu < 0 || cpugpu > 1) {
         return JNI_FALSE;
     }
@@ -218,7 +219,9 @@ Java_com_example_qrsmartreader_Yolov8NcnnPose_loadModel(JNIEnv *env, jobject thi
                 g_yolo = new Inference;
             //g_yolo->load(mgr, modeltype, target_size, mean_vals[(int)modelid], norm_vals[(int)modelid], use_gpu);
             g_yolo->loadNcnnNetwork(mgr, modeltype, target_size, mean_vals[(int) modelid],
-                                    norm_vals[(int) modelid], use_gpu);
+                                    norm_vals[(int) modelid], use_gpu,
+                                    reinterpret_cast<const char *>(model_bin),
+                                    reinterpret_cast<const char *>(model_param));
         }
     }
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -32,7 +33,7 @@ class GalleryDetectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.qrPointView.init(viewModel.aiResult!!.image, viewModel.aiResult!!.points)
+        binding.qrPointView.init(viewModel.aiResult.image, viewModel.aiResult.points)
 
         setListeners()
         setObservers()
@@ -46,6 +47,9 @@ class GalleryDetectionFragment : Fragment() {
                         R.id.action_galleryDetectionFragment_to_resultScreenFragment,
                         bundleOf(ResultScreenFragment.QR_DETECTION_RESULT to result)
                     )
+            } else {
+                Toast.makeText(requireContext(),
+                    getString(R.string.not_worked_recgnition),Toast.LENGTH_LONG).show()
             }
         }
     }

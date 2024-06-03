@@ -7,18 +7,19 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.example.qrsmartreader.App
 import com.example.qrsmartreader.SingleLiveEvent
-import com.example.qrsmartreader.domain.AiResult
-import com.example.qrsmartreader.domain.AiScanInteractor
+import com.example.qrsmartreader.domain.DataProcess
+import com.example.qrsmartreader.domain.entities.AiResultEntity
+import com.example.qrsmartreader.ui.interactors.AiScanOnnxInteractor
 import com.example.qrsmartreader.ui.interactors.QrDecoderInteractor
 import javax.inject.Inject
 
-class GalleryDetectionViewModel(val myApplication: Application) : AndroidViewModel(myApplication) {
+class GalleryDetectionViewModel(private val myApplication: Application) : AndroidViewModel(myApplication) {
 
     val recognisedQrSLE: SingleLiveEvent<String>
-    val aiResult: AiResult
+    val aiResult: AiResultEntity
 
-    //    todo
-    private val aiScanInteractor: AiScanInteractor by lazy { AiScanInteractor(myApplication) }
+    @Inject
+    lateinit var aiScanOnnxInteractor: AiScanOnnxInteractor
 
     @Inject
     lateinit var qrDecoderInteractor: QrDecoderInteractor
@@ -26,13 +27,13 @@ class GalleryDetectionViewModel(val myApplication: Application) : AndroidViewMod
     init {
         App().component.inject(this)
         recognisedQrSLE = qrDecoderInteractor.recognisedQrSLE
-        aiResult = qrDecoderInteractor.aiResult!!
+        aiResult = DataProcess.aiResult!!
     }
 
     fun getNewBitmap(newRationPoints: List<PointF>): Bitmap? {
-        if (aiResult == null || aiResult!!.image == null) return null
-        val width = aiResult!!.image!!.width
-        val height = aiResult!!.image!!.height
+        if (aiResult.image == null) return null
+        val width = aiResult.image!!.width
+        val height = aiResult.image!!.height
 
         val newPoints = FloatArray(8).mapIndexed { i, fl ->
             if (i % 2 == 0) {
@@ -42,7 +43,7 @@ class GalleryDetectionViewModel(val myApplication: Application) : AndroidViewMod
             }
         }.toFloatArray()
         Log.i("kpop attack", newPoints.joinToString { "$it " })
-        return aiScanInteractor.performPerspectiveTransformation(aiResult!!.image!!, newPoints)
+        return aiScanOnnxInteractor.performPerspectiveTransformation(aiResult.image!!, newPoints)
     }
 
     fun decodeQR(qr: Bitmap) {

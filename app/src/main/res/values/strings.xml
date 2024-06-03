@@ -38,4 +38,5 @@
     <string name="settings">Настройки</string>
     <string name="galery">Галерея</string>
     <string name="camera">Камера</string>
+    <string name="not_worked_recgnition">Не получилось распознать</string>
 </resources>

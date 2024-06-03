@@ -11,7 +11,7 @@ interface Yolov8NcnnInterface {
     fun qr_h(): Int
 
 
-    fun loadModel(mgr: AssetManager?, modelid: Int, cpugpu: Int): Boolean
+    fun loadModel(mgr: AssetManager?, modelid: Int, cpugpu: Int, modelBin:String, modelParam: String): Boolean
 
 //    todo убрать facing
     fun openCamera(facing: Int, isFpsCounting: Boolean): Boolean

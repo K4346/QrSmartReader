@@ -1,26 +1,22 @@
-package com.example.yolov8n_pose
+package com.example.qrsmartreader.domain
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.RectF
-import android.graphics.drawable.Drawable
-import android.util.Log
-import androidx.core.graphics.drawable.toBitmap
-import java.io.File
-import java.io.FileOutputStream
+import com.example.qrsmartreader.domain.entities.AiResultEntity
 import java.nio.FloatBuffer
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.PriorityQueue
 import kotlin.math.max
 import kotlin.math.min
 
 // todo убрать
 object DataProcess {
 
-        const val BATCH_SIZE = 1
-        const val IMAGE_INPUT_SIZE = 640
-        const val PIXEL_SIZE = 3
-        const val FILE_NAME = "best.onnx"
+    const val BATCH_SIZE = 1
+    const val IMAGE_INPUT_SIZE = 640
+    const val PIXEL_SIZE = 3
+    const val FILE_NAME = "yolov8_pose_n_fp16.onnx"
+
+    var aiResult: AiResultEntity? = null
 
 
     fun imageToBitmap(img: Bitmap): Bitmap {
@@ -28,12 +24,14 @@ object DataProcess {
         return Bitmap.createScaledBitmap(
             img
 //            bitmap
-            , IMAGE_INPUT_SIZE, IMAGE_INPUT_SIZE, true)
+            , IMAGE_INPUT_SIZE, IMAGE_INPUT_SIZE, true
+        )
     }
 
     fun bitmapToFloatBuffer(bitmap: Bitmap): FloatBuffer {
         val imageSTD = 255f
-        val buffer = FloatBuffer.allocate(BATCH_SIZE * PIXEL_SIZE * IMAGE_INPUT_SIZE * IMAGE_INPUT_SIZE)
+        val buffer =
+            FloatBuffer.allocate(BATCH_SIZE * PIXEL_SIZE * IMAGE_INPUT_SIZE * IMAGE_INPUT_SIZE)
         buffer.rewind()
 
         val area = IMAGE_INPUT_SIZE * IMAGE_INPUT_SIZE
@@ -46,26 +44,19 @@ object DataProcess {
             0,
             bitmap.width,
             bitmap.height
-        ) //배열에 RGB 담기
-
-        //하나씩 받아서 버퍼에 할당
+        )
         for (i in 0 until IMAGE_INPUT_SIZE - 1) {
             for (j in 0 until IMAGE_INPUT_SIZE - 1) {
                 val idx = IMAGE_INPUT_SIZE * i + j
                 val pixelValue = bitmapData[idx]
-                // 위에서 부터 차례대로 R 값 추출, G 값 추출, B값 추출 -> 255로 나누어서 0~1 사이로 정규화
                 buffer.put(idx, ((pixelValue shr 16 and 0xff) / imageSTD))
                 buffer.put(idx + area, ((pixelValue shr 8 and 0xff) / imageSTD))
                 buffer.put(idx + area * 2, ((pixelValue and 0xff) / imageSTD))
-                //원리 bitmap == ARGB 형태의 32bit, R값의 시작은 16bit (16 ~ 23bit 가 R영역), 따라서 16bit 를 쉬프트
-                //그럼 A값이 사라진 RGB 값인 24bit 가 남는다. 이후 255와 AND 연산을 통해 맨 뒤 8bit 인 R값만 가져오고, 255로 나누어 정규화를 한다.
-                //다시 8bit 를 쉬프트 하여 R값을 제거한 G,B 값만 남은 곳에 다시 AND 연산, 255 정규화, 다시 반복해서 RGB 값을 buffer 에 담는다.
             }
         }
         buffer.rewind()
         return buffer
     }
-
 
 
     fun outputsToNPMSPredictions(outputs: Array<*>): ArrayList<FloatArray> {
@@ -86,13 +77,12 @@ object DataProcess {
             }
         }
 
-var maxq=-100f
+        var maxq = -100f
         for (i in 0 until cols) {
-            if (output[i][4] >maxq){
-                maxq=output[i][4]
+            if (output[i][4] > maxq) {
+                maxq = output[i][4]
             }
         }
-        Log.i("kpopopo","max - $maxq")
         for (i in 0 until cols) {
             if (output[i][4] > confidenceThreshold) {
                 val xPos = output[i][0]
@@ -125,13 +115,11 @@ var maxq=-100f
         pq.addAll(results)
 
         while (pq.isNotEmpty()) {
-            // 큐 안에 속한 최대 확률값을 가진 FloatArray 저장
             val detections = pq.toTypedArray()
             val max = detections[0]
             list.add(max)
             pq.clear()
 
-            // 교집합 비율 확인하고 50% 넘기면 제거
             for (k in 1 until detections.size) {
                 val detection = detections[k]
                 val rectF = RectF(detection[0], detection[1], detection[2], detection[3])
@@ -146,14 +134,12 @@ var maxq=-100f
     }
 
 
-    // 겹치는 비율 (교집합/합집합)
     private fun boxIOU(a: RectF, b: RectF): Float {
         return boxIntersection(a, b) / boxUnion(a, b)
     }
 
-    //교집합
+
     private fun boxIntersection(a: RectF, b: RectF): Float {
-        // x1, x2 == 각 rect 객체의 중심 x or y값, w1, w2 == 각 rect 객체의 넓이 or 높이
         val w = overlap(
             (a.left + a.right) / 2f, a.right - a.left,
             (b.left + b.right) / 2f, b.right - b.left
@@ -166,13 +152,11 @@ var maxq=-100f
         return if (w < 0 || h < 0) 0f else w * h
     }
 
-    //합집합
     private fun boxUnion(a: RectF, b: RectF): Float {
         val i = boxIntersection(a, b)
         return (a.right - a.left) * (a.bottom - a.top) + (b.right - b.left) * (b.bottom - b.top) - i
     }
 
-    //서로 겹치는 길이
     private fun overlap(x1: Float, w1: Float, x2: Float, w2: Float): Float {
         val l1 = x1 - w1 / 2
         val l2 = x2 - w2 / 2

@@ -415,8 +415,8 @@ int Yolo::load(const char* modeltype, int _target_size, const float* _mean_vals,
 
     char parampath[256];
     char modelpath[256];
-    sprintf(parampath, "best-sim-opt-fp16.param", modeltype);
-    sprintf(modelpath, "best-sim-opt-fp16.bin", modeltype);
+    sprintf(parampath, "yolov8_segment_n_fp16.param", modeltype);
+    sprintf(modelpath, "yolov8_segment_n_fp16.bin", modeltype);
 
     yolo.load_param(parampath);
     yolo.load_model(modelpath);
@@ -453,8 +453,8 @@ int Yolo::load(AAssetManager* mgr, const char* modeltype, int _target_size, cons
 
     char parampath[256];
     char modelpath[256];
-    sprintf(parampath, "best-sim-opt-fp16.param", modeltype);
-    sprintf(modelpath, "best-sim-opt-fp16.bin", modeltype);
+    sprintf(parampath, "yolov8_segment_s_fp16.param", modeltype);
+    sprintf(modelpath, "yolov8_segment_s_fp16.bin", modeltype);
 
     yolo.load_param(mgr, parampath);
     yolo.load_model(mgr, modelpath);
@@ -636,9 +636,9 @@ int Yolo::detect(const cv::Mat& rgb, std::vector<Object>& objects, float prob_th
         cv::approxPolyDP(contours[largestContourIndex], corners, cv::arcLength(contours[largestContourIndex], true) * 0.02, true);
         if (corners.size() == 4) {
             // Отрисовываем углы
-            for (const auto &corner : corners) {
-                cv::circle(rgb, corner, 3, cv::Scalar(0, 255, 0), -1);
-            }
+//            for (const auto &corner : corners) {
+////                cv::circle(rgb, corner, 3, cv::Scalar(0, 255, 0), -1);
+//            }
 
 //
 //
@@ -650,9 +650,9 @@ int Yolo::detect(const cv::Mat& rgb, std::vector<Object>& objects, float prob_th
 
             // Выполняем перспективное преобразование
             cv::Mat transformation = cv::getPerspectiveTransform(corners, dstPoints);
-            cv::warpPerspective(rgb, rgb, transformation, rgb.size());
             cv::Mat gray;
-            cv::cvtColor(rgb, gray, cv::COLOR_BGR2GRAY);
+            cv::warpPerspective(rgb, gray, transformation, rgb.size());
+            cv::cvtColor(gray, gray, cv::COLOR_BGR2GRAY);
             qr_w=gray.cols;
             qr_h=gray.rows;
             qr_image = gray.clone();

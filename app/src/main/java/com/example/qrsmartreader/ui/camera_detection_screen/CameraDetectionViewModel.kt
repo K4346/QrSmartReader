@@ -1,6 +1,7 @@
 package com.example.qrsmartreader.ui.camera_detection_screen
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.AndroidViewModel
 import com.example.qrsmartreader.App
@@ -10,6 +11,7 @@ import com.example.qrsmartreader.domain.entities.ProcessorRecognitionType
 import com.example.qrsmartreader.domain.entities.QrResultEntity
 import com.example.qrsmartreader.ui.interactors.QrDecoderInteractor
 import com.example.qrsmartreader.ui.interactors.SettingsInteractor
+import java.io.IOException
 import javax.inject.Inject
 
 class CameraDetectionViewModel(val myApplication: Application) : AndroidViewModel(myApplication) {
@@ -30,6 +32,7 @@ class CameraDetectionViewModel(val myApplication: Application) : AndroidViewMode
     val isFpsCounting: Boolean by lazy { interactor.getFpsCountIsVisible() }
     val processorType: ProcessorRecognitionType by lazy { interactor.getProcessorType() }
     val modelType: CameraRecognitionType by lazy { interactor.getModelType() }
+    val modelName: String by lazy { interactor.getModelVersionName() }
     var currentImage: IntArray = intArrayOf()
 
     fun decodeQr(bitmap: Bitmap) {
