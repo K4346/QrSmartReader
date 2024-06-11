@@ -432,7 +432,7 @@ int Yolo::load(const char* modeltype, int _target_size, const float* _mean_vals,
     return 0;
 }
 
-int Yolo::load(AAssetManager* mgr, const char* modeltype, int _target_size, const float* _mean_vals, const float* _norm_vals, bool use_gpu)
+int Yolo::load(AAssetManager* mgr, const char* modeltype, int _target_size, const float* _mean_vals, const float* _norm_vals, bool use_gpu, const char* model_bin, const char* model_param)
 {
     yolo.clear();
     blob_pool_allocator.clear();
@@ -453,8 +453,8 @@ int Yolo::load(AAssetManager* mgr, const char* modeltype, int _target_size, cons
 
     char parampath[256];
     char modelpath[256];
-    sprintf(parampath, "yolov8_segment_s_fp16.param", modeltype);
-    sprintf(modelpath, "yolov8_segment_s_fp16.bin", modeltype);
+    sprintf(parampath, model_param, modeltype);
+    sprintf(modelpath, model_bin, modeltype);
 
     yolo.load_param(mgr, parampath);
     yolo.load_model(mgr, modelpath);

@@ -228,7 +228,16 @@ JNIEXPORT jboolean JNICALL Java_com_example_qrsmartreader_Yolov8Ncnn_loadModel(J
         {
             if (!g_yolo)
                 g_yolo = new Yolo;
-            g_yolo->load(mgr, modeltype, target_size, mean_vals[(int)modelid], norm_vals[(int)modelid], use_gpu);
+            const char *native_model_bin = env->GetStringUTFChars(model_bin, 0);
+            const char *native_model_param = env->GetStringUTFChars(model_param, 0);
+            g_yolo->load(mgr,
+                         modeltype,
+                         target_size,
+                         mean_vals[(int)modelid],norm_vals[(int)modelid],
+                         use_gpu,
+                         native_model_bin,native_model_param);
+            env->ReleaseStringUTFChars(model_bin, native_model_bin);
+            env->ReleaseStringUTFChars(model_param, native_model_param);
         }
     }
 

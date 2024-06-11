@@ -8,7 +8,6 @@ import java.util.PriorityQueue
 import kotlin.math.max
 import kotlin.math.min
 
-// todo убрать
 object DataProcess {
 
     const val BATCH_SIZE = 1

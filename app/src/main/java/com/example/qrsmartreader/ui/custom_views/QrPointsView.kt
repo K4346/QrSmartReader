@@ -31,7 +31,6 @@ class QrPointsView @JvmOverloads constructor(
 
     private lateinit var initPoints: FloatArray
 
-    //    todo желательно избавиться
     var firstDrawFlag = true
 
 
@@ -66,8 +65,7 @@ class QrPointsView @JvmOverloads constructor(
 
     override fun onDrawForeground(canvas: Canvas) {
         super.onDrawForeground(canvas)
-//        Log.i("kpopaaaa", getDrawable().intrinsicWidth.toString())
-        //todo вынести в функцию getCoordByDp мб
+
         matrix = imageMatrix
         if (firstDrawFlag) {
             val p1 = getCoordByDp(initPoints[0], initPoints[1])
@@ -114,15 +112,7 @@ class QrPointsView @JvmOverloads constructor(
                         if (point.x > 0 && point.x < this@QrPointsView.drawable.intrinsicWidth / density && point.y > 0 && point.y < this@QrPointsView.drawable.intrinsicHeight / density) {
                             points[it].x = x
                             points[it].y = y
-                            Log.i(
-                                "kpopaaaa",
-                                "${point.x} ${point.y}   ${drawable.intrinsicWidth / density}  ${drawable.intrinsicHeight / density} "
-                            )
-                            Log.i(
-                                "kpopaaaa222",
-                                "${ points[it].x} ${points[it].y}   ${drawable.intrinsicWidth / density}  ${drawable.intrinsicHeight / density} "
-                            )
-//                            Log.i("kpopaaaa", "$x $y   ${ drawable.intrinsicWidth/density}  ${ drawable.intrinsicHeight/density} ")
+
                             invalidate()
                         }
                     }
@@ -167,8 +157,6 @@ class QrPointsView @JvmOverloads constructor(
             (dx * density * (matrix?.values()?.get(0) ?: 1f)) + (matrix?.values()?.get(2)!! ?: 0f)
         val transformedY =
             (dy * density * (matrix?.values()?.get(4) ?: 1f)) + (matrix?.values()?.get(5)!! ?: 0f)
-        (Log.i("KpopPP", "${dx}dp==${transformedX}px,${dy}dp==${transformedY}px"))
-        Log.i("KpopPP", matrix.values().joinToString { it.toString() })
         return PointF(transformedX, transformedY)
     }
 

@@ -20,13 +20,11 @@ class ResultScreenViewModel(val app: Application) : AndroidViewModel(app) {
     val recognisedQrSLE: SingleLiveEvent<String>
     var sourceBitmap: Bitmap? = null
 
-    //    todo стоит от него избавиться и передавать в функциях
     lateinit var resizedBitmap: Bitmap
 
     @Inject
     lateinit var aiScanOnnxInteractor: AiScanOnnxInteractor
 
-    //    todo dagger
     @Inject
     lateinit var qrResultsInteractor: QrResultsInteractor
 
@@ -42,7 +40,6 @@ class ResultScreenViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun scanQr() {
         resizedBitmap = DataProcess.imageToBitmap(sourceBitmap!!)
-//        todo сделать интерфейс для того чтоб использовать 1метод
         qrDecoderInteractor.decodeQRCodeAsync(app, resizedBitmap)
     }
 
@@ -52,9 +49,6 @@ class ResultScreenViewModel(val app: Application) : AndroidViewModel(app) {
         if (points == null) {
             aiRecognisedQrSLE.value = AiResultEntity(sourceBitmap, points, null)
             return
-        }
-        points.forEach {
-            Log.i("kpopdots_ai", it.toString())
         }
 
         aiRecognisedQrSLE.value = AiResultEntity(sourceBitmap, points, null)

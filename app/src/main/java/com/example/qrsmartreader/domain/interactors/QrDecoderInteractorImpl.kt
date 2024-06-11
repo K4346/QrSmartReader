@@ -26,7 +26,6 @@ import javax.inject.Inject
 class QrDecoderInteractorImpl : QrDecoderInteractor {
     override val recognisedQrSLE = SingleLiveEvent<String>()
 
-//    todo убрать ненужное/починить
 override var aiResult: AiResultEntity? = null
 
     @Inject
@@ -45,17 +44,13 @@ override var aiResult: AiResultEntity? = null
 
 
     override fun decodeQRCodeAsync(app: Application, bitmap: Bitmap) {
-        //todo получать только 1?
         if (!working) working = true else return
-        val startTime = System.currentTimeMillis()
 //        val image = InputImage.fromByteArray(bytes, w,h,0, InputImage.IMAGE_FORMAT_NV21)
         val image = InputImage.fromBitmap(bitmap, 0)
         var res = ""
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
                 if (barcodes.isNotEmpty()) {
-                    val endTime = System.currentTimeMillis()
-                    Log.i("kpop", (endTime - startTime).toString())
                     res = barcodes[0].rawValue.toString()
                     recognisedQrSLE.value = res
 
@@ -73,8 +68,6 @@ override var aiResult: AiResultEntity? = null
     }
 
     fun decodeQRCode4(intArray: IntArray, h: Int, w: Int): String {
-        val startTime = System.currentTimeMillis()
-        var endTime: Long = 0
         val hints: MutableMap<DecodeHintType, Boolean?> = EnumMap(
             DecodeHintType::class.java
         )
@@ -83,7 +76,6 @@ override var aiResult: AiResultEntity? = null
         var decoded: String? = ""
         val source = RGBLuminanceSource(w, h, intArray)
         decoded = try {
-            endTime = System.currentTimeMillis()
             QRCodeReader()
                 .decode(
                     BinaryBitmap(HybridBinarizer(source)),
@@ -94,7 +86,6 @@ override var aiResult: AiResultEntity? = null
         }
         if (decoded == null) {
             decoded = try {
-                endTime = System.currentTimeMillis()
                 QRCodeReader()
                     .decode(
                         BinaryBitmap(GlobalHistogramBinarizer(source)),
@@ -104,16 +95,11 @@ override var aiResult: AiResultEntity? = null
                 null
             }
         }
-        if (decoded != null) {
-            Log.i("kpop", (endTime - startTime).toString())
-            Log.i("kpop", decoded)
-        }
+
         return decoded ?: ""
     }
 
     fun decodeQRCode3(intArray: IntArray, h: Int, w: Int): String {
-        val startTime = System.currentTimeMillis()
-        var endTime: Long = 0
 
         val barcode = Image(w, h, "Y800")
         barcode.setData(intArray)
@@ -127,9 +113,7 @@ override var aiResult: AiResultEntity? = null
                 qrCodeString = sym.data
             }
         }
-        endTime = System.currentTimeMillis()
-        Log.i("kpop", (endTime - startTime).toString())
-        Log.i("kpop", qrCodeString)
+
         return qrCodeString
 
     }

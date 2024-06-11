@@ -205,7 +205,6 @@ Java_com_example_qrsmartreader_Yolov8NcnnPose_loadModel(JNIEnv *env, jobject thi
     int target_size = target_sizes[(int) modelid];
     bool use_gpu = (int) cpugpu == 1;
 
-    // reload
     {
         ncnn::MutexLockGuard g(lock);
 
@@ -218,10 +217,15 @@ Java_com_example_qrsmartreader_Yolov8NcnnPose_loadModel(JNIEnv *env, jobject thi
                 //g_yolo = new Yolo;
                 g_yolo = new Inference;
             //g_yolo->load(mgr, modeltype, target_size, mean_vals[(int)modelid], norm_vals[(int)modelid], use_gpu);
+            const char *native_model_bin = env->GetStringUTFChars(model_bin, 0);
+            const char *native_model_param = env->GetStringUTFChars(model_param, 0);
+
             g_yolo->loadNcnnNetwork(mgr, modeltype, target_size, mean_vals[(int) modelid],
                                     norm_vals[(int) modelid], use_gpu,
-                                    reinterpret_cast<const char *>(model_bin),
-                                    reinterpret_cast<const char *>(model_param));
+                                    native_model_bin,
+                                    native_model_param);
+            env->ReleaseStringUTFChars(model_bin, native_model_bin);
+            env->ReleaseStringUTFChars(model_param, native_model_param);
         }
     }
 

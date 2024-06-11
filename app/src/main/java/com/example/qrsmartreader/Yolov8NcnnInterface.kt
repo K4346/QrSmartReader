@@ -13,7 +13,6 @@ interface Yolov8NcnnInterface {
 
     fun loadModel(mgr: AssetManager?, modelid: Int, cpugpu: Int, modelBin:String, modelParam: String): Boolean
 
-//    todo убрать facing
     fun openCamera(facing: Int, isFpsCounting: Boolean): Boolean
     fun closeCamera(): Boolean
     fun setOutputWindow(surface: Surface?): Boolean

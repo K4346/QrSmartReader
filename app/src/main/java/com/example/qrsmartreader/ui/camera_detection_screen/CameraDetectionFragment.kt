@@ -75,10 +75,7 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
 
     private fun initListeners() {
         viewModel.recognisedQrSLE.observe(viewLifecycleOwner) { result ->
-//            todo
             if (result.isNotEmpty()) {
-                Log.i("kpop", result)
-//                todo разобрать мб
                 yolov8ncnn.clearQR()
                 Navigation.findNavController(requireView())
                     .navigate(
@@ -93,7 +90,6 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
     }
 
     private fun reload() {
-//        todo 0
         val ret_init = yolov8ncnn.loadModel(requireActivity().assets, 0,
             when (viewModel.processorType){
                 ProcessorRecognitionType.Cpu -> 0
@@ -144,7 +140,6 @@ class CameraDetectionFragment : Fragment(), SurfaceHolder.Callback {
                 && !viewModel.currentImage.contentEquals(qwerty)
             ) {
                 viewModel.currentImage = qwerty
-                Log.i("kpoper", "WTF ${height}")
                 readQRCode(qwerty, height, width)
             }
             handler.postDelayed(this, 300) // Повторяем через 0.1 секунду

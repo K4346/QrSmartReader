@@ -171,8 +171,8 @@ int Inference::loadNcnnNetwork(AAssetManager* mgr, const char* modeltype , const
 
     char parampath[256];
     char modelpath[256];
-    sprintf(parampath, "yolov8_pose_n_fp16.param", modeltype);
-    sprintf(modelpath, "yolov8_pose_n_fp16.bin", modeltype);
+    sprintf(parampath, model_param, modeltype);
+    sprintf(modelpath, model_bin, modeltype);
 
     net.load_param(mgr, parampath);
     net.load_model(mgr, modelpath);
@@ -291,7 +291,6 @@ std::vector<Pose> Inference::runInference(const cv::Mat &input)
         poses.push_back(pose);
     }
 
-//    todo можно считать qr с наибольшей вероятностью
     if (!poses.empty()) {
         std::vector<float> kps = poses[0].kps;
         std::vector<cv::Point2f> corners = {cv::Point2f(kps[0], kps[1]),

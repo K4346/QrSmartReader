@@ -65,10 +65,8 @@ class AiScanOnnxInteractorImpl(context: Context) : AiScanOnnxInteractor {
         val outputs = resultTensor[0].value as Array<*>
         val results = DataProcess.outputsToNPMSPredictions(outputs)
         val end = System.currentTimeMillis()
-        Log.i("kpoptime", "${end - start}")
         if (results.isNotEmpty()) {
             val maxProbabilityPoints = results.maxByOrNull { it.getOrNull(4) ?: Float.MIN_VALUE }!!
-            Log.i("kpop", results[0].joinToString { "$it " })
             return floatArrayOf(
                 maxProbabilityPoints[5], maxProbabilityPoints[6],
                 maxProbabilityPoints[8], maxProbabilityPoints[9],
@@ -87,7 +85,6 @@ class AiScanOnnxInteractorImpl(context: Context) : AiScanOnnxInteractor {
         // Создаем матрицу для перспективного преобразования
         val matrix = Matrix()
 
-//        todo сделать адаптивно
         val dstPoints = floatArrayOf(
             40f,
             40f,

@@ -42,7 +42,6 @@ class GalleryDetectionViewModel(private val myApplication: Application) : Androi
                 newRationPoints[i / 2].y * height
             }
         }.toFloatArray()
-        Log.i("kpop attack", newPoints.joinToString { "$it " })
         return aiScanOnnxInteractor.performPerspectiveTransformation(aiResult.image!!, newPoints)
     }
 

@@ -6,11 +6,7 @@ import android.view.Surface
 
 
 class Yolov8Ncnn:Yolov8NcnnInterface {
-//    todo убрать мб
-    fun messageMe(text: String): String {
-        Log.i("kpop", text)
-        return text
-    }
+
 
     external override fun clearQR()
     external override fun sendQRDataToCpp(): IntArray?

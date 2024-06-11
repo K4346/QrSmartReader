@@ -69,8 +69,7 @@ class ResultScreenFragment : Fragment() {
             }
         }
         viewModel.recognisedQrSLE.observe(viewLifecycleOwner) { result ->
-            Log.i("kpop222", result)
-//todo
+
             showResultText(result.ifEmpty { "Ничего не найдено" })
 
             if (result.isNullOrBlank()) {
@@ -104,10 +103,6 @@ class ResultScreenFragment : Fragment() {
         binding.settingsButton.setOnClickListener {
             openSettingsScreen()
         }
-//        todo
-//        binding.cameraPoseButton.setOnClickListener {
-//            openCameraScreen(CameraRecognitionType.Pose)
-//        }
     }
 
     private fun openSettingsScreen() {

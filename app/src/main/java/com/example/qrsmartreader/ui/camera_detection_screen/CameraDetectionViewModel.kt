@@ -36,7 +36,6 @@ class CameraDetectionViewModel(val myApplication: Application) : AndroidViewMode
     var currentImage: IntArray = intArrayOf()
 
     fun decodeQr(bitmap: Bitmap) {
-//        todo убрать App!!!
         qrDecoderInteractor.decodeQRCodeAsync(myApplication,bitmap)
     }
 
